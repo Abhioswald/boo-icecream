@@ -211,7 +211,7 @@ export default function ScrollVideoHero({ onOpenOrder }) {
       <div className="absolute inset-0 w-full h-full pointer-events-none z-0">
         <video
           ref={videoRef}
-          src="/assets/boo-scroll-lite.mp4"
+          src="/assets/boo-scroll-ios.mp4"
           muted
           playsInline
           preload="auto"
