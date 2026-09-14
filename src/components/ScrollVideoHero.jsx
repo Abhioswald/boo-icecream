@@ -24,6 +24,10 @@ export default function ScrollVideoHero({ onOpenOrder }) {
   const durationRef = useRef(0);
   const isHeroActiveRef = useRef(false);
 
+  // Video unlock and ready state refs for iOS Safari compatibility
+  const unlockedRef = useRef(false);
+  const videoReadyRef = useRef(false);
+
   // Text and UI element refs (Direct GPU styling, zero React state overhead)
   const text1Ref = useRef(null);
   const text2Ref = useRef(null);
@@ -41,31 +45,103 @@ export default function ScrollVideoHero({ onOpenOrder }) {
     // Check reduced motion preference
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    // Setup video metadata & predecode first frame
-    const setupVideo = () => {
+    // Explicitly configure iOS Safari video playback flags
+    video.muted = true;
+    video.defaultMuted = true;
+    video.playsInline = true;
+    video.setAttribute('playsinline', '');
+    video.setAttribute('webkit-playsinline', '');
+
+    // Setup video metadata without immediate seeking
+    const onMetadata = () => {
       durationRef.current = video.duration || 1;
-      if (durationRef.current > 0) {
-        try {
-          // Predecode first frame cleanly
-          video.currentTime = 0.01;
-        } catch {
-          // Ignore seek initialization errors
-        }
+    };
+
+    const startLoop = () => {
+      if (!rafIdRef.current && !prefersReducedMotion && document.visibilityState === 'visible') {
+        rafIdRef.current = requestAnimationFrame(renderLoop);
+      }
+    };
+
+    const stopLoop = () => {
+      if (rafIdRef.current) {
+        cancelAnimationFrame(rafIdRef.current);
+        rafIdRef.current = null;
+      }
+    };
+
+    const removeGestureListeners = () => {
+      window.removeEventListener('pointerdown', onUserGesture);
+      window.removeEventListener('touchstart', onUserGesture);
+      window.removeEventListener('wheel', onUserGesture);
+    };
+
+    // Transparent unlock for iOS Safari
+    const unlockVideo = async () => {
+      if (!video || unlockedRef.current) return;
+
+      try {
+        video.muted = true;
+        video.defaultMuted = true;
+        video.playsInline = true;
+
+        await video.play();
+        video.pause();
+
+        const target = Math.max(0.01, targetTimeRef.current || 0.01);
+        video.currentTime = target;
+        smoothTimeRef.current = target;
+
+        unlockedRef.current = true;
+        startLoop();
+        removeGestureListeners();
+      } catch {
+        // Safari may require a real user gesture. Do not throw or break the page.
+      }
+    };
+
+    const onUserGesture = () => {
+      if (!unlockedRef.current && !prefersReducedMotion) {
+        unlockVideo();
+      }
+    };
+
+    const addGestureListeners = () => {
+      window.addEventListener('pointerdown', onUserGesture, { passive: true, once: true });
+      window.addEventListener('touchstart', onUserGesture, { passive: true, once: true });
+      window.addEventListener('wheel', onUserGesture, { passive: true, once: true });
+    };
+
+    const onDataReady = () => {
+      durationRef.current = video.duration || durationRef.current || 1;
+      videoReadyRef.current = true;
+      if (!unlockedRef.current && !prefersReducedMotion) {
+        unlockVideo();
       }
     };
 
     video.pause();
 
-    if (video.readyState >= 1) {
-      setupVideo();
+    addGestureListeners();
+
+    if (video.readyState >= 2) {
+      onMetadata();
+      onDataReady();
     } else {
-      video.addEventListener('loadedmetadata', setupVideo, { once: true });
-      video.addEventListener('loadeddata', setupVideo, { once: true });
+      video.addEventListener('loadedmetadata', onMetadata);
+      video.addEventListener('loadeddata', onDataReady);
+      video.addEventListener('canplay', onDataReady);
     }
 
     // Single requestAnimationFrame seek interpolation loop
     const renderLoop = () => {
-      if (isHeroActiveRef.current && durationRef.current > 0 && !prefersReducedMotion) {
+      if (
+        isHeroActiveRef.current &&
+        videoReadyRef.current &&
+        unlockedRef.current &&
+        durationRef.current > 0 &&
+        !prefersReducedMotion
+      ) {
         // Interpolate target time with 0.08 smoothing factor
         smoothTimeRef.current += (targetTimeRef.current - smoothTimeRef.current) * 0.08;
 
@@ -79,19 +155,6 @@ export default function ScrollVideoHero({ onOpenOrder }) {
 
       if (isHeroActiveRef.current && document.visibilityState === 'visible') {
         rafIdRef.current = requestAnimationFrame(renderLoop);
-      }
-    };
-
-    const startLoop = () => {
-      if (!rafIdRef.current && !prefersReducedMotion && document.visibilityState === 'visible') {
-        rafIdRef.current = requestAnimationFrame(renderLoop);
-      }
-    };
-
-    const stopLoop = () => {
-      if (rafIdRef.current) {
-        cancelAnimationFrame(rafIdRef.current);
-        rafIdRef.current = null;
       }
     };
 
@@ -131,6 +194,11 @@ export default function ScrollVideoHero({ onOpenOrder }) {
           // 1. Calculate target video time ONLY (no aggressive direct seeking)
           if (durationRef.current > 0) {
             targetTimeRef.current = progress * durationRef.current;
+          }
+
+          // Trigger unlock on scroll if not already unlocked
+          if (!unlockedRef.current && !prefersReducedMotion) {
+            unlockVideo();
           }
 
           // 2. Direct progress gauge DOM update
@@ -192,6 +260,10 @@ export default function ScrollVideoHero({ onOpenOrder }) {
 
     return () => {
       stopLoop();
+      removeGestureListeners();
+      video.removeEventListener('loadedmetadata', onMetadata);
+      video.removeEventListener('loadeddata', onDataReady);
+      video.removeEventListener('canplay', onDataReady);
       document.removeEventListener('visibilitychange', handleVisibilityChange);
       if (scrollTriggerRef.current) scrollTriggerRef.current.kill();
       ctx.revert();
@@ -212,9 +284,12 @@ export default function ScrollVideoHero({ onOpenOrder }) {
         <video
           ref={videoRef}
           src="/assets/boo-scroll-ios.mp4"
+          poster="/images/boo-scroll-poster.jpg"
           muted
           playsInline
           preload="auto"
+          disablePictureInPicture
+          controls={false}
           style={{ backgroundColor: '#050505' }}
           className="w-full h-full object-cover object-center filter brightness-[0.92] contrast-[1.05]"
         />
