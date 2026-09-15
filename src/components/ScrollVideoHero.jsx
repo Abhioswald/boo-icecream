@@ -280,7 +280,7 @@ export default function ScrollVideoHero({ onOpenOrder }) {
   return (
     <section ref={containerRef} className="relative w-full h-screen overflow-hidden bg-[#050505]">
       {/* Background Video */}
-      <div className="absolute inset-0 w-full h-full pointer-events-none z-0">
+      <div className="absolute inset-0 w-full h-full pointer-events-none z-0" aria-hidden="true">
         <video
           ref={videoRef}
           src="/assets/boo-scroll-ios.mp4"
@@ -290,6 +290,8 @@ export default function ScrollVideoHero({ onOpenOrder }) {
           preload="auto"
           disablePictureInPicture
           controls={false}
+          aria-hidden="true"
+          tabIndex={-1}
           style={{ backgroundColor: '#050505' }}
           className="w-full h-full object-cover object-center filter brightness-[0.92] contrast-[1.05]"
         />
@@ -388,13 +390,13 @@ export default function ScrollVideoHero({ onOpenOrder }) {
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2">
             <button
               onClick={handleManualExplore}
-              className="w-full sm:w-auto px-8 py-4 bg-white text-black font-display font-black text-xs tracking-[0.25em] uppercase rounded-full hover:bg-purple-300 transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-[0_0_30px_rgba(255,255,255,0.3)] cursor-pointer"
+              className="w-full sm:w-auto px-8 py-4 bg-white text-black font-display font-black text-xs tracking-[0.25em] uppercase rounded-full hover:bg-purple-300 transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-[0_0_30px_rgba(255,255,255,0.3)] cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-400"
             >
               EXPLORE BOO!
             </button>
             <button
               onClick={onOpenOrder}
-              className="w-full sm:w-auto px-8 py-4 glass-card text-white font-display font-bold text-xs tracking-[0.25em] uppercase rounded-full hover:border-purple-500/50 hover:bg-purple-950/40 transition-all duration-300 transform hover:scale-105 active:scale-95 cursor-pointer"
+              className="w-full sm:w-auto px-8 py-4 glass-card text-white font-display font-bold text-xs tracking-[0.25em] uppercase rounded-full hover:border-purple-500/50 hover:bg-purple-950/40 transition-all duration-300 transform hover:scale-105 active:scale-95 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-400"
             >
               PRE-ORDER $8.50
             </button>

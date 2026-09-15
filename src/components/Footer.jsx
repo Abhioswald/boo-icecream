@@ -16,18 +16,18 @@ export default function Footer() {
           </span>
         </div>
 
-        <div className="flex items-center gap-8 tracking-widest uppercase text-[10px] text-zinc-500">
-          <a href="#story" className="hover:text-zinc-300 transition-colors">
+        <nav aria-label="Footer Navigation" className="flex flex-wrap items-center gap-6 sm:gap-8 tracking-widest uppercase text-[10px] text-zinc-500">
+          <a href="#story" className="hover:text-zinc-300 transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-purple-500 rounded px-1 py-0.5">
             MANIFESTO
           </a>
-          <a href="#flavor" className="hover:text-zinc-300 transition-colors">
+          <a href="#flavor" className="hover:text-zinc-300 transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-purple-500 rounded px-1 py-0.5">
             LAB SPECS
           </a>
-          <a href="#texture" className="hover:text-zinc-300 transition-colors">
+          <a href="#texture" className="hover:text-zinc-300 transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-purple-500 rounded px-1 py-0.5">
             INGREDIENTS
           </a>
           <span className="text-zinc-700 hidden md:inline">PARIS • TOKYO • NYC • LONDON</span>
-        </div>
+        </nav>
       </div>
     </footer>
   );

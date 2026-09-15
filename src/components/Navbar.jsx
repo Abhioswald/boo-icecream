@@ -37,7 +37,8 @@ export default function Navbar({ onOpenOrder }) {
         {/* Left Logo */}
         <a
           href="#"
-          className="group flex items-center gap-2 text-decoration-none"
+          aria-label="BOO! Home"
+          className="group flex items-center gap-2 text-decoration-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-500 rounded-lg p-1"
           onClick={(e) => {
             e.preventDefault();
             window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -52,22 +53,22 @@ export default function Navbar({ onOpenOrder }) {
         </a>
 
         {/* Center Desktop Links */}
-        <nav className="hidden md:flex items-center gap-8">
+        <nav aria-label="Main Navigation" className="hidden md:flex items-center gap-8">
           <button
             onClick={() => scrollToSection('product')}
-            className="text-[11px] font-semibold tracking-[0.25em] uppercase text-zinc-400 hover:text-white transition-colors duration-200 cursor-pointer"
+            className="text-[11px] font-semibold tracking-[0.25em] uppercase text-zinc-400 hover:text-white transition-colors duration-200 cursor-pointer focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-purple-500 rounded px-1.5 py-1"
           >
             PRODUCT
           </button>
           <button
             onClick={() => scrollToSection('flavor')}
-            className="text-[11px] font-semibold tracking-[0.25em] uppercase text-zinc-400 hover:text-white transition-colors duration-200 cursor-pointer"
+            className="text-[11px] font-semibold tracking-[0.25em] uppercase text-zinc-400 hover:text-white transition-colors duration-200 cursor-pointer focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-purple-500 rounded px-1.5 py-1"
           >
             FLAVOR
           </button>
           <button
             onClick={() => scrollToSection('story')}
-            className="text-[11px] font-semibold tracking-[0.25em] uppercase text-zinc-400 hover:text-white transition-colors duration-200 cursor-pointer"
+            className="text-[11px] font-semibold tracking-[0.25em] uppercase text-zinc-400 hover:text-white transition-colors duration-200 cursor-pointer focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-purple-500 rounded px-1.5 py-1"
           >
             STORY
           </button>
@@ -77,7 +78,7 @@ export default function Navbar({ onOpenOrder }) {
         <div className="flex items-center gap-4">
           <button
             onClick={onOpenOrder}
-            className="group relative inline-flex items-center justify-center px-4 py-1.5 text-[11px] font-bold tracking-[0.2em] uppercase text-white bg-zinc-900/60 border border-white/10 hover:border-purple-500/40 rounded-full transition-all duration-300 cursor-pointer active:scale-95"
+            className="group relative inline-flex items-center justify-center px-4 py-1.5 text-[11px] font-bold tracking-[0.2em] uppercase text-white bg-zinc-900/60 border border-white/10 hover:border-purple-500/40 rounded-full transition-all duration-300 cursor-pointer active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-500"
           >
             <span className="flex items-center gap-1.5">
               <span>BUY NOW</span>
@@ -88,8 +89,10 @@ export default function Navbar({ onOpenOrder }) {
           {/* Mobile Menu Button */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            aria-label="Toggle navigation menu"
-            className="md:hidden p-2 text-zinc-400 hover:text-white rounded-lg bg-zinc-900/40 border border-zinc-800/60"
+            aria-label={mobileMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
+            aria-expanded={mobileMenuOpen}
+            aria-controls="mobile-nav-menu"
+            className="md:hidden p-2 text-zinc-400 hover:text-white rounded-lg bg-zinc-900/40 border border-zinc-800/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-500 cursor-pointer"
           >
             {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>
@@ -98,23 +101,26 @@ export default function Navbar({ onOpenOrder }) {
 
       {/* Mobile Menu Overlay */}
       {mobileMenuOpen && (
-        <div className="md:hidden glass-nav border-b border-white/10 px-6 py-6 animate-in fade-in slide-in-from-top-4 duration-300">
-          <nav className="flex flex-col gap-4">
+        <div
+          id="mobile-nav-menu"
+          className="md:hidden glass-nav border-b border-white/10 px-6 py-6 animate-in fade-in slide-in-from-top-4 duration-300"
+        >
+          <nav aria-label="Mobile Navigation" className="flex flex-col gap-4">
             <button
               onClick={() => scrollToSection('product')}
-              className="text-left text-xs font-semibold tracking-[0.25em] uppercase text-zinc-300 hover:text-purple-400 transition-colors"
+              className="text-left text-xs font-semibold tracking-[0.25em] uppercase text-zinc-300 hover:text-purple-400 transition-colors cursor-pointer py-1"
             >
               PRODUCT
             </button>
             <button
               onClick={() => scrollToSection('flavor')}
-              className="text-left text-xs font-semibold tracking-[0.25em] uppercase text-zinc-300 hover:text-purple-400 transition-colors"
+              className="text-left text-xs font-semibold tracking-[0.25em] uppercase text-zinc-300 hover:text-purple-400 transition-colors cursor-pointer py-1"
             >
               FLAVOR
             </button>
             <button
               onClick={() => scrollToSection('story')}
-              className="text-left text-xs font-semibold tracking-[0.25em] uppercase text-zinc-300 hover:text-purple-400 transition-colors"
+              className="text-left text-xs font-semibold tracking-[0.25em] uppercase text-zinc-300 hover:text-purple-400 transition-colors cursor-pointer py-1"
             >
               STORY
             </button>
@@ -123,7 +129,7 @@ export default function Navbar({ onOpenOrder }) {
                 setMobileMenuOpen(false);
                 onOpenOrder();
               }}
-              className="w-full mt-2 py-2.5 bg-purple-600 hover:bg-purple-500 text-white text-center font-bold tracking-[0.2em] text-xs uppercase rounded-full transition-all"
+              className="w-full mt-2 py-2.5 bg-purple-600 hover:bg-purple-500 text-white text-center font-bold tracking-[0.2em] text-xs uppercase rounded-full transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-400"
             >
               BUY NOW
             </button>

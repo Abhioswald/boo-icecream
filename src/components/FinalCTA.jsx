@@ -121,14 +121,14 @@ export default function FinalCTA({ onOpenOrder, onExploreFlavor }) {
         <div ref={buttonsRef} className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
           <button
             onClick={onExploreFlavor}
-            className="w-full sm:w-auto px-10 py-4 rounded-full glass-card text-white font-display font-bold text-xs tracking-[0.25em] uppercase hover:bg-white/10 hover:border-white/30 transition-all duration-300 active:scale-95 cursor-pointer"
+            className="w-full sm:w-auto px-10 py-4 rounded-full glass-card text-white font-display font-bold text-xs tracking-[0.25em] uppercase hover:bg-white/10 hover:border-white/30 transition-all duration-300 active:scale-95 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-400"
           >
             EXPLORE FLAVOR
           </button>
           
           <button
             onClick={onOpenOrder}
-            className="w-full sm:w-auto px-10 py-4 rounded-full bg-gradient-to-r from-purple-600 via-fuchsia-600 to-purple-600 text-white font-display font-black text-xs tracking-[0.25em] uppercase hover:shadow-[0_0_35px_rgba(168,85,247,0.4)] transition-all duration-300 transform hover:scale-105 active:scale-95 flex items-center justify-center gap-2 cursor-pointer"
+            className="w-full sm:w-auto px-10 py-4 rounded-full bg-gradient-to-r from-purple-600 via-fuchsia-600 to-purple-600 text-white font-display font-black text-xs tracking-[0.25em] uppercase hover:shadow-[0_0_35px_rgba(168,85,247,0.4)] transition-all duration-300 transform hover:scale-105 active:scale-95 flex items-center justify-center gap-2 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-400"
           >
             <span>BUY NOW</span>
             <ArrowUpRight className="w-4 h-4" />
